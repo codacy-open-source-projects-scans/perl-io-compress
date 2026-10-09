@@ -1,17 +1,20 @@
 #! perl -w
 
 use strict ;
-require 5.006 ;
+use warnings;
+require 5.008 ;
 
-$::VERSION = '2.219' ;
-$::DEP_VERSION = '2.218';
+$::VERSION = '2.225' ;
+$::DEP_ZLIB_VERSION = '2.225';
+$::DEP_BZIP2_VERSION = '2.225';
 
 use lib '.';
 use private::MakeUtil;
 use ExtUtils::MakeMaker 5.16 ;
 
-UpDowngrade(getPerlFiles('MANIFEST'))
-    unless $ENV{PERL_CORE};
+# Old ExtUtils::MakeMakers may have literal _ in their VERSIONs. Strip it out
+# so we can use normal numeric comparisons: '6.57_02' -> 6.5702
+(my $mm_version = ExtUtils::MakeMaker->VERSION) =~ tr/_//d;
 
 WriteMakefile(
     NAME         => 'IO::Compress',
@@ -25,23 +28,17 @@ WriteMakefile(
     (
       $ENV{SKIP_FOR_CORE}
         ? ()
-	    : (PREREQ_PM   => { 'Compress::Raw::Bzip2' => $::DEP_VERSION,
-		                    'Compress::Raw::Zlib'  => $::DEP_VERSION,
+	    : (PREREQ_PM   => { 'Compress::Raw::Bzip2' => $::DEP_BZIP2_VERSION,
+		                    'Compress::Raw::Zlib'  => $::DEP_ZLIB_VERSION,
 		                    'Scalar::Util'  => 0,
                             'Encode'        => 0,
                             'Time::Local'   => 0,
-		                    $] >= 5.005 && $] < 5.006
-                                ? ('File::BSDGlob' => 0)
-                                : () }
+                          }
 	      )
     ),
 
-    (
-    $] >= 5.005
-        ? (ABSTRACT => 'IO Interface to compressed data files/buffers',
-            AUTHOR  => 'Paul Marquess <pmqs@cpan.org>')
-        : ()
-    ),
+    ABSTRACT => 'IO Interface to compressed data files/buffers',
+    AUTHOR   => 'Paul Marquess <pmqs@outlook.com>',
 
     INSTALLDIRS => ($] >= 5.009 && $] < 5.011 ? 'perl' : 'site'),
 
@@ -53,7 +50,7 @@ WriteMakefile(
         : ()
     ),
 
-     ( eval { ExtUtils::MakeMaker->VERSION(6.46) }
+     ( $mm_version >= 6.46
         ? ( META_MERGE  => {
 
                 "meta-spec" => { version => 2 },
@@ -81,7 +78,7 @@ WriteMakefile(
         : ()
     ),
 
-    ((ExtUtils::MakeMaker->VERSION() gt '6.30') ?
+    ($mm_version >= 6.30 ?
         ('LICENSE'  => 'perl')         : ()),
 
 ) ;

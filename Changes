@@ -1,6 +1,168 @@
 CHANGES
 -------
 
+  2.225 9 October 2026
+
+    * update to version 2,225
+      Fri Oct 9 15:32:13 2026 +0100
+      ad11c5d0913e697572987e9c1bfc49b59743dee3
+
+    * Update email address
+      Fri Oct 9 14:12:19 2026 +0100
+      08b77153277feaee4aa8f29778470b97983e19ca
+
+    * Fix inefficient and unbounded code for reading gzip Name & Comment fields #86
+      Fri Oct 9 13:58:14 2026 +0100
+      cdc16a0607c97c457d49fcf23d9f28a049dc05de
+
+    * add newStreamHook #84
+      Fri Oct 9 11:49:22 2026 +0100
+      d283b082186ec57fb11bd693f7ccca762d567c96
+
+    * Fix typo
+      Fri Sep 4 00:08:27 2026 +0100
+      f6755650cc4ac1e2e34502ee5db1f9c855215976
+
+    * Fix typo in Changes file
+      Fri Aug 28 12:32:14 2026 +0100
+      bd72147253d077e10157c4696e9d11b135762a4e
+
+  2.224 28 August 2026
+
+    * Update to version 2.224
+      Fri Aug 28 12:15:12 2026 +0100
+      04c15c022022020f12271071710f42296d98fb47
+
+    * remove 5.6-specific code and make 5.8 the min versionsupported
+      Wed Aug 26 16:06:31 2026 +0100
+      5e153a50913d012cb58016ad2782ce2bfb3bbc92
+
+    * Remove 5,6 from Travis build
+      Tue Aug 25 11:52:20 2026 +0100
+      952483f59dd4de7c70d747e330cbec7ae35706da
+
+    * remove dead backwards compatibility code
+      Tue Aug 25 11:48:21 2026 +0100
+      61a0b950e6466bc685b5a638a02a77db426be528
+
+    * remove redundant version checks
+      Tue Aug 25 11:48:21 2026 +0100
+      0de16bbbbe1baeec3f79583690a1003262b9302d
+
+    * fix test skip message with threaded perl 5.6
+      Tue Aug 25 11:48:21 2026 +0100
+      7992fb718dc041d3e04da635d7e9c542c10f66ce
+
+    * remove broken version check
+      Tue Aug 25 11:48:21 2026 +0100
+      92c2eb86890f840a44d87a749ef735537e2fa548
+
+    * simplify $needBinmode logic
+      Tue Aug 25 11:48:21 2026 +0100
+      86f96d52d96030c74e48ab44c07f48d252872aae
+
+    * fix ExtUtils::MakeMaker version check
+      Tue Aug 25 11:48:21 2026 +0100
+      8ed0a2ab1a9ce4e9048b2d90dc857ae3cbca0119
+
+    * more instances needed fixed for   #82
+      Tue Aug 25 11:23:00 2026 +0100
+      d7e0e2520af0f73d802e1288e02d1da15b926387
+
+    * make tests pass with spaces in $^X
+      Tue Aug 25 11:05:11 2026 +0100
+      674a7b6dc5ec6413ecf66f9d25e8a3b845bef226
+
+    * possible missing comma in file anyunc.pl Fixes #81
+      Sun Aug 2 15:48:54 2026 +0100
+      fe011442f2d40b436fcc19cd96e38fb08031d8bc
+
+    * Update zipdetails to version 4.009
+      Sat Jul 25 21:35:19 2026 +0100
+      3f0508d793e894d9baf134a5fea673b4677ab7c9
+
+    * Set  GlobMapper.pm to version 1.002.  Fixes #80
+      Tue Jul 21 23:10:54 2026 +0100
+      4dc945b0b64f8ead71b7bbba87407889bb0cf0cb
+
+    * Update CHANGES
+      Sat Jul 4 09:23:19 2026 +0100
+      cfbbd9e8f32c8279076be21591da0ef65bf4aecf
+
+  2.223 4 July 2026
+
+    * Fix typo in Makefile.PL Fixes #79
+      Sat Jul 4 09:22:42 2026 +0100
+      5e2d96044b22be0c6cd0ba408b671281d15e5a9c
+
+    * Update to version 2.223 Fixes #79
+      Sat Jul 4 09:16:41 2026 +0100
+      b9031b0fc30ad378e6cfda5c3dfbede82ec6ac59
+
+    * Update to version 2.222
+      Fri Jul 3 13:08:15 2026 +0100
+      68f1713d94521e8990fa92f7947d0f5f92ead6ce
+
+    * Tag `:constants` no longer exports all constants Fixes #78, #64
+      Fri Jul 3 11:55:19 2026 +0100
+      a2a91df2d64c5731287e6ca9ad47462cd8907f32
+
+    * Bump actions/checkout from 6 to 7
+      Fri Jul 3 00:06:22 2026 +0100
+      941a75e143d7fc707483a30fc4b8097f406485e5
+
+  2.221 16 June 2026
+
+    * Version 2.221
+      Tue Jun 16 15:45:21 2026 +0100
+      245a6818d4215bb5ee6c27bb509caee5f8c4dd68
+
+    * update zipdetails  to version 4.008
+      Tue Jun 16 15:29:27 2026 +0100
+      1da3c5fcecf6fbe230a17ea9b358f50ef27d70f7
+
+    * Update reference for  the info-zip estrafld  file.
+      Tue Jun 16 15:25:06 2026 +0100
+      914f39406bc164221bfa94905ac1335669ddf446
+
+    * Add hex values for utf8 encoding as a comment
+      Tue Jun 16 14:30:54 2026 +0100
+      9d5ead52df529f96645e38f3a49924235f74092b
+
+    * Fix File::GlobMapper wildcard replacement after ordinary letters
+      Sat Jun 13 23:49:17 2026 +0100
+      3651e9eb3fca0bd3718d1d8b12e96b9e80096144
+
+    * Update to zipdetails 4.007
+      Mon Jun 1 22:55:05 2026 +0100
+      865b8388aa5d1028724ddde5e411c0868aa077c7
+
+    * Remove test for filename when not needed. Helps with EBCDIC support. #73
+      Sun May 31 15:23:31 2026 +0100
+      6a477fc83776a0fa5d2aea5d923cadd323985ad1
+
+    * IO-Compress: generalize for EBCDIC
+      Sat May 30 00:39:09 2026 +0100
+      648120dfc768a1de22ee2a76aacf17c61d13cac6
+
+  2.220 16 May 2026
+
+    * remove use of eval in globmapper. #73
+      Sat May 16 17:48:34 2026 +0100
+      f2db247bf90d4cc7ee2710be384946081f3b4610
+
+    * Update zipdetails to version 4.006.
+      Sat May 16 13:43:12 2026 +0100
+      33c89d03d6e746ed2ead4f2f6570d47864c61bc7
+
+    * Fix typo in fastForward #72
+      Fri May 15 23:18:39 2026 +0100
+      68db44076f4c1a86a2ffe53a958eac6cabaf72e2
+
+    * Fix issue with "rawdeflate` option in AnyInflate. #71
+      Fri May 15 22:56:20 2026 +0100
+      fba3efe40208bd07034b6a3cf6bf9fc3b8b4f215
+
   2.219 9 March 2026
 
     * Fix a few  typos

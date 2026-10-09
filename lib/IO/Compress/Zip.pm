@@ -4,41 +4,41 @@ use strict ;
 use warnings;
 use bytes;
 
-use IO::Compress::Base::Common  2.219 qw(:Status );
-use IO::Compress::RawDeflate 2.219 ();
-use IO::Compress::Adapter::Deflate 2.219 ;
-use IO::Compress::Adapter::Identity 2.219 ;
-use IO::Compress::Zlib::Extra 2.219 ;
-use IO::Compress::Zip::Constants 2.219 ;
+use IO::Compress::Base::Common  2.225 qw(:Status );
+use IO::Compress::RawDeflate 2.225 ();
+use IO::Compress::Adapter::Deflate 2.225 ;
+use IO::Compress::Adapter::Identity 2.225 ;
+use IO::Compress::Zlib::Extra 2.225 ;
+use IO::Compress::Zip::Constants 2.225 ;
 
 use File::Spec();
 use Config;
 
-use Compress::Raw::Zlib  2.218 ();
+use Compress::Raw::Zlib 2.225 ();
 
 BEGIN
 {
     eval { require IO::Compress::Adapter::Bzip2 ;
-           IO::Compress::Adapter::Bzip2->VERSION( 2.218 );
+           IO::Compress::Adapter::Bzip2->VERSION( 2.225 );
            require IO::Compress::Bzip2 ;
-           IO::Compress::Bzip2->VERSION( 2.218 );
+           IO::Compress::Bzip2->VERSION( 2.225 );
          } ;
 
     eval { require IO::Compress::Adapter::Lzma ;
-           IO::Compress::Adapter::Lzma->VERSION( 2.217 );
+           IO::Compress::Adapter::Lzma->VERSION( 2.225 );
            require IO::Compress::Lzma ;
-           IO::Compress::Lzma->VERSION( 2.217 );
+           IO::Compress::Lzma->VERSION( 2.225 );
          } ;
 
     eval { require IO::Compress::Adapter::Xz ;
-           IO::Compress::Adapter::Xz->VERSION( 2.217 );
+           IO::Compress::Adapter::Xz->VERSION( 2.225 );
            require IO::Compress::Xz ;
-           IO::Compress::Xz->VERSION( 2.217 );
+           IO::Compress::Xz->VERSION( 2.225 );
          } ;
     eval { require IO::Compress::Adapter::Zstd ;
-           IO::Compress::Adapter::Zstd->VERSION( 2.217 );
+           IO::Compress::Adapter::Zstd->VERSION( 2.225 );
            require IO::Compress::Zstd ;
-           IO::Compress::Zstd->VERSION( 2.217 );
+           IO::Compress::Zstd->VERSION( 2.225 );
          } ;
 }
 
@@ -47,17 +47,18 @@ require Exporter ;
 
 our ($VERSION, @ISA, @EXPORT_OK, %EXPORT_TAGS, %DEFLATE_CONSTANTS, $ZipError);
 
-$VERSION = '2.219';
+$VERSION = '2.225';
 $ZipError = '';
 
 @ISA = qw(IO::Compress::RawDeflate Exporter);
 @EXPORT_OK = qw( $ZipError zip ) ;
 %EXPORT_TAGS = %IO::Compress::RawDeflate::DEFLATE_CONSTANTS ;
 
-$EXPORT_TAGS{all} = [ defined $EXPORT_TAGS{all} ? @{ $EXPORT_TAGS{all} } : (), @EXPORT_OK ] ;
+my @zip_methods = qw( ZIP_CM_STORE ZIP_CM_DEFLATE ZIP_CM_BZIP2 ZIP_CM_LZMA ZIP_CM_XZ ZIP_CM_ZSTD ) ;
+$EXPORT_TAGS{all} = [ defined $EXPORT_TAGS{all} ? @{ $EXPORT_TAGS{all} } : (), @EXPORT_OK, @zip_methods ] ;
 
-$EXPORT_TAGS{zip_method} = [qw( ZIP_CM_STORE ZIP_CM_DEFLATE ZIP_CM_BZIP2 ZIP_CM_LZMA ZIP_CM_XZ ZIP_CM_ZSTD)];
-push @{ $EXPORT_TAGS{all} }, @{ $EXPORT_TAGS{zip_method} };
+$EXPORT_TAGS{zip_method} = [ @zip_methods ];
+push @{ $EXPORT_TAGS{constants} }, @zip_methods ;
 
 Exporter::export_ok_tags('all');
 
@@ -2277,7 +2278,7 @@ The primary site for gzip is L<http://www.gzip.org>.
 
 =head1 AUTHOR
 
-This module was written by Paul Marquess, C<pmqs@cpan.org>.
+This module was written by Paul Marquess, C<pmqs@outlook.com>.
 
 =head1 MODIFICATION HISTORY
 

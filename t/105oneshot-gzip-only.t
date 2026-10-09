@@ -14,16 +14,12 @@ use Test::More ;
 use CompTestUtils;
 
 BEGIN {
-    plan(skip_all => "oneshot needs Perl 5.005 or better - you have Perl $]" )
-        if $] < 5.005 ;
-
-
     # use Test::NoWarnings, if available
     my $extra = 0 ;
     $extra = 1
         if eval { require Test::NoWarnings ;  Test::NoWarnings->import; 1 };
 
-    plan tests => 70 + $extra ;
+    plan tests => 73 + $extra ;
 
     use_ok('IO::Compress::Gzip', qw($GzipError)) ;
     use_ok('IO::Uncompress::Gunzip', qw($GunzipError)) ;
@@ -128,6 +124,44 @@ sub gzipGetHeader
     ok ! defined $hdr->{Name}, "  Name is undef";
     cmp_ok $hdr->{Time}, '>=', $before, "  Time is ok";
     cmp_ok $hdr->{Time}, '<=', $after, "  Time is ok";
+}
+
+
+{
+    title "NewStreamHook - two streams";
+
+    use IO::Uncompress::Gunzip qw($GunzipError gunzip) ;
+
+    my $lex = LexFile->new( my $name );
+
+    my $gz = IO::Compress::Gzip->new( $name, Name => "first" )
+            or diag "GzipError is $GzipError" ;
+
+    $gz->write("abcd");
+
+    $gz->newStream( Name => "second" );
+    $gz->write("efgh");
+
+    $gz->close() ;
+
+    my @names ;
+    my $data;
+
+    gunzip $name => \$data,
+            MultiStream   => 1,
+            Append        => 1,
+            NewStreamHook =>
+                sub
+                {
+                    my $info = shift;
+                    push @names, $info->{Name};
+                }
+            or diag "GunzipError is $GunzipError" ;
+
+
+    is $data, "abcdefgh" ;
+
+    is_deeply \@names, ["first", "second"], "NewStreamHook called with correct names" ;
 }
 
 # TODO add more error cases

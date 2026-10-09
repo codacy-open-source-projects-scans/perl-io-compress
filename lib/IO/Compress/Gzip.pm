@@ -1,19 +1,17 @@
 package IO::Compress::Gzip ;
 
-require 5.006 ;
-
 use strict ;
 use warnings;
 use bytes;
 
 require Exporter ;
 
-use IO::Compress::RawDeflate 2.219 () ;
-use IO::Compress::Adapter::Deflate 2.219 ;
+use IO::Compress::RawDeflate 2.225 () ;
+use IO::Compress::Adapter::Deflate 2.225 ;
 
-use IO::Compress::Base::Common  2.219 qw(:Status );
-use IO::Compress::Gzip::Constants 2.219 ;
-use IO::Compress::Zlib::Extra 2.219 ;
+use IO::Compress::Base::Common  2.225 qw(:Status );
+use IO::Compress::Gzip::Constants 2.225 ;
+use IO::Compress::Zlib::Extra 2.225 ;
 
 BEGIN
 {
@@ -25,7 +23,7 @@ BEGIN
 
 our ($VERSION, @ISA, @EXPORT_OK, %EXPORT_TAGS, %DEFLATE_CONSTANTS, $GzipError);
 
-$VERSION = '2.219';
+$VERSION = '2.225';
 $GzipError = '' ;
 
 @ISA    = qw(IO::Compress::RawDeflate Exporter);
@@ -1319,7 +1317,7 @@ The primary site for gzip is L<http://www.gzip.org>.
 
 =head1 AUTHOR
 
-This module was written by Paul Marquess, C<pmqs@cpan.org>.
+This module was written by Paul Marquess, C<pmqs@outlook.com>.
 
 =head1 MODIFICATION HISTORY
 

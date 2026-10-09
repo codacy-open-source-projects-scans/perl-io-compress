@@ -18,9 +18,6 @@ use IO::Compress::Zip     qw($ZipError);
 use IO::Uncompress::Unzip qw($UnzipError);
 
 BEGIN {
-    plan skip_all => "Encode is not available"
-        if $] < 5.006 ;
-
     eval { require Encode; Encode->import(); };
 
     plan skip_all => "Encode is not available"
@@ -42,10 +39,10 @@ BEGIN {
 
     my $lex = LexFile->new( my $file1 );
 
-    my @names = ( 'alpha \N{GREEK SMALL LETTER ALPHA}',
-                  'beta \N{GREEK SMALL LETTER BETA}',
-                  'gamma \N{GREEK SMALL LETTER GAMMA}',
-                  'delta \N{GREEK SMALL LETTER DELTA}'
+    my @names = ( 'alpha \N{GREEK SMALL LETTER ALPHA}', # CE B1
+                  'beta \N{GREEK SMALL LETTER BETA}',   # CE B2
+                  'gamma \N{GREEK SMALL LETTER GAMMA}', # CE B3
+                  'delta \N{GREEK SMALL LETTER DELTA}'  # CE B4
                 ) ;
 
     my @encoded = map { Encode::encode_utf8($_) } @names;

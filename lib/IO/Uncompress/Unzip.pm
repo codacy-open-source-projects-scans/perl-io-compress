@@ -1,7 +1,4 @@
 package IO::Uncompress::Unzip;
-
-require 5.006 ;
-
 # for RFC1952
 
 use strict ;
@@ -9,14 +6,14 @@ use warnings;
 use bytes;
 
 use IO::File;
-use IO::Uncompress::RawInflate  2.219 ;
-use IO::Compress::Base::Common  2.219 qw(:Status );
-use IO::Uncompress::Adapter::Inflate  2.219 ;
-use IO::Uncompress::Adapter::Identity 2.219 ;
-use IO::Compress::Zlib::Extra 2.219 ;
-use IO::Compress::Zip::Constants 2.219 ;
+use IO::Uncompress::RawInflate  2.225 ;
+use IO::Compress::Base::Common  2.225 qw(:Status );
+use IO::Uncompress::Adapter::Inflate  2.225 ;
+use IO::Uncompress::Adapter::Identity 2.225 ;
+use IO::Compress::Zlib::Extra 2.225 ;
+use IO::Compress::Zip::Constants 2.225 ;
 
-use Compress::Raw::Zlib  2.218 () ;
+use Compress::Raw::Zlib 2.225 () ;
 
 BEGIN
 {
@@ -24,13 +21,13 @@ BEGIN
    local $SIG{__DIE__};
 
     eval{ require IO::Uncompress::Adapter::Bunzip2 ;
-          IO::Uncompress::Adapter::Bunzip2->VERSION(2.219) } ;
+          IO::Uncompress::Adapter::Bunzip2->VERSION(2.225) } ;
     eval{ require IO::Uncompress::Adapter::UnLzma ;
-          IO::Uncompress::Adapter::UnLzma->VERSION(2.217) } ;
+          IO::Uncompress::Adapter::UnLzma->VERSION(2.225) } ;
     eval{ require IO::Uncompress::Adapter::UnXz ;
-          IO::Uncompress::Adapter::UnXz->VERSION(2.217) } ;
+          IO::Uncompress::Adapter::UnXz->VERSION(2.225) } ;
     eval{ require IO::Uncompress::Adapter::UnZstd ;
-          IO::Uncompress::Adapter::UnZstd->VERSION(2.217) } ;
+          IO::Uncompress::Adapter::UnZstd->VERSION(2.225) } ;
 }
 
 
@@ -38,7 +35,7 @@ require Exporter ;
 
 our ($VERSION, @ISA, @EXPORT_OK, %EXPORT_TAGS, $UnzipError, %headerLookup);
 
-$VERSION = '2.219';
+$VERSION = '2.225';
 $UnzipError = '';
 
 @ISA    = qw(IO::Uncompress::RawInflate Exporter);
@@ -157,8 +154,8 @@ sub fastForward
 
     while ($offset > 0)
     {
-        $c = length $offset
-            if length $offset < $c ;
+        $c = $offset
+            if $offset < $c ;
 
         $offset -= $c;
 
@@ -2016,7 +2013,7 @@ The primary site for gzip is L<http://www.gzip.org>.
 
 =head1 AUTHOR
 
-This module was written by Paul Marquess, C<pmqs@cpan.org>.
+This module was written by Paul Marquess, C<pmqs@outlook.com>.
 
 =head1 MODIFICATION HISTORY
 

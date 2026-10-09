@@ -3,32 +3,19 @@ package File::GlobMapper;
 use strict;
 use warnings;
 use Carp;
-
-our ($CSH_GLOB);
-
-BEGIN
-{
-    if ($] < 5.006)
-    {
-        require File::BSDGlob; File::BSDGlob->import(':glob');
-        $CSH_GLOB = File::BSDGlob::GLOB_CSH();
-        *globber = \&File::BSDGlob::csh_glob;
-    }
-    else
-    {
-        require File::Glob; File::Glob->import(':glob');
-        $CSH_GLOB = File::Glob::GLOB_CSH();
-        #*globber = \&File::Glob::bsd_glob;
-        *globber = \&File::Glob::csh_glob;
-    }
-}
+use File::Glob ':glob';
 
 our ($Error);
 
 our ($VERSION, @EXPORT_OK);
-$VERSION = '1.001';
+$VERSION = '1.002';
 @EXPORT_OK = qw( globmap );
 
+our $BEGIN_DELIM = "\xFF";
+our $END_DELIM   = "\xFE";
+our $BACKSLASH_ESC = "\xFD";
+our $HASH_ESC = "\xFC";
+our $STAR_ESC = "\xFB";
 
 our ($noPreBS, $metachars, $matchMetaRE, %mapping, %wildCount);
 $noPreBS = '(?<!\\\)' ; # no preceding backslash
@@ -62,7 +49,7 @@ sub new
     my $inputGlob = shift ;
     my $outputGlob = shift ;
     # TODO -- flags needs to default to whatever File::Glob does
-    my $flags = shift || $CSH_GLOB ;
+    my $flags = shift || GLOB_CSH;
     #my $flags = shift ;
 
     $inputGlob =~ s/^\s*\<\s*//;
@@ -89,7 +76,7 @@ sub new
     $self->_parseOutputGlob()
         or return undef ;
 
-    my @inputFiles = globber($self->{InputGlob}, $flags) ;
+    my @inputFiles = File::Glob::csh_glob($self->{InputGlob}, $flags) ;
 
     if (GLOB_ERROR)
     {
@@ -310,14 +297,22 @@ sub _parseOutputGlob
     }
 
     my $noPreBS = '(?<!\\\)' ; # no preceding backslash
-    #warn "noPreBS = '$noPreBS'\n";
 
-    #$string =~ s/${noPreBS}\$(\d)/\${$1}/g;
-    $string =~ s/${noPreBS}#(\d)/\${$1}/g;
-    $string =~ s#${noPreBS}\*#\${inFile}#g;
-    $string = '"' . $string . '"';
+    # escape any use of the delimiter symbols
+    # $string =~ s/(${BEGIN_DELIM}|${END_DELIM}|${BACKSLASH_ESC})/$1$1/g;
 
-    #print "OUTPUT '$self->{OutputGlob}' => '$string'\n";
+    # escape \# and \*
+    $string =~ s/\\#/${HASH_ESC}/g;
+    $string =~ s/\\\*/${STAR_ESC}/g;
+
+    # Transform "#3" to BEGIN_DELIM 3 END_DELIM
+    $string =~ s/#(\d)/${BEGIN_DELIM}${1}${END_DELIM}/g;
+
+    $string =~ s#\*#${BEGIN_DELIM}${END_DELIM}#g;
+
+    # print "INPUT  '$self->{InputPattern}'\n";
+    # print "OUTPUT '$self->{OutputGlob}' => '$string'\n";
+
     $self->{OutputPattern} = $string ;
 
     return 1 ;
@@ -335,11 +330,29 @@ sub _getFiles
         next if $inFiles{$inFile} ++ ;
 
         my $outFile = $inFile ;
+        my @matches ;
 
-        if ( $inFile =~ m/$self->{InputPattern}/ )
+        if (@matches = ($inFile =~ m/$self->{InputPattern}/ ))
         {
-            no warnings 'uninitialized';
-            eval "\$outFile = $self->{OutputPattern};" ;
+            $outFile = $self->{OutputPattern};
+            my $ix = 1;
+
+            # get the filename glob
+            $outFile =~ s/${BEGIN_DELIM}${END_DELIM}/$inFile/g;
+
+            # now each of the #1, #2,...
+            for my $pattern (@matches)
+            {
+                $outFile =~ s/${BEGIN_DELIM}${ix}${END_DELIM}/$pattern/g;
+
+                ++ $ix;
+            }
+
+            # unescape
+            $outFile =~ s/${BEGIN_DELIM}${BEGIN_DELIM}/${BEGIN_DELIM}/g;
+            $outFile =~ s/${END_DELIM}${END_DELIM}/${END_DELIM}/g;
+            $outFile =~ s/${HASH_ESC}/#/g;
+            $outFile =~ s/${STAR_ESC}/*/g;
 
             if (defined $outInMapping{$outFile})
             {
@@ -670,7 +683,7 @@ L<File::Glob|File::Glob>
 
 =head1 AUTHOR
 
-The I<File::GlobMapper> module was written by Paul Marquess, F<pmqs@cpan.org>.
+The I<File::GlobMapper> module was written by Paul Marquess, F<pmqs@outlook.com>.
 
 =head1 COPYRIGHT AND LICENSE
 
